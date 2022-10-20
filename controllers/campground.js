@@ -25,6 +25,7 @@ exports.showCampground = async (req, res) => {
 exports.createCamground = async (req, res) => {
   req.body.author = req.session.user_id; // Adding the user Id to campground of the user id who made the campground
   const camp = new Campground(req.body);
+  camp.images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
   await camp.save();
   res.send(camp);
 };
@@ -36,6 +37,12 @@ exports.editCampground = async (req, res) => {
     { _id: id, author: { _id: req.session.user_id } },
     { ...req.body }
   );
+  const newImages = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
+  campground.images.push(...newImages);
+  await campground.save();
   if (campground) res.send("Updated Successfully");
   else throw new AppError("You are not authorized to update Campground", 401);
 };

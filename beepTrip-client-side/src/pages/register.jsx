@@ -12,6 +12,7 @@ const Register = ({ updateUser, redirect }) => {
     currentUser[e.currentTarget.name] = e.currentTarget.value;
     setUser(currentUser);
   };
+
   const handleRegister = async (e) => {
     try {
       e.preventDefault();

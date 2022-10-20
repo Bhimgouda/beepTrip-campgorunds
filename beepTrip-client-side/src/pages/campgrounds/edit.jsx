@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const EditCampground = ({ user }) => {
   const [campground, setcampground] = useState({
     description: "",
-    image: "",
+    images: "",
     location: "",
     price: "",
     title: "",
@@ -38,15 +38,23 @@ const EditCampground = ({ user }) => {
   const handleEdit = async (e) => {
     try {
       e.preventDefault();
-      const { title, location, image, price, description } = e.target;
+      const { title, location, images, price, description } = e.target;
       const editedCampground = {
         title: title.value,
         location: location.value,
-        image: image.value,
+        images: images.value,
         description: description.value,
         price: price.value,
       };
-      await updateCampground(id, editedCampground);
+      const formData = new FormData();
+      for (var i = 0; i < images.files.length; i++) {
+        formData.append("images", images.files[i]);
+      }
+      formData.append("description", description.value);
+      formData.append("price", price.value);
+      formData.append("location", location.value);
+      formData.append("title", title.value);
+      await updateCampground(id, formData);
       toast.success("Campground Updated Successfully", { autoClose: 2500 });
       navigate(`/campgrounds/${id}`);
     } catch (error) {
@@ -93,16 +101,16 @@ const EditCampground = ({ user }) => {
             />
           </div>
           <div className="mb-2">
-            <label className="form-label" htmlFor="image">
-              className Image Url
+            <label className="form-label" htmlFor="images">
+              Upload Images
             </label>
             <input
+              multiple
               onChange={handleChange}
-              value={campground.image}
               className="form-control"
-              type="text"
-              id="image"
-              name="image"
+              type="file"
+              id="images"
+              name="images"
             />
           </div>
           <div className="mb-3">

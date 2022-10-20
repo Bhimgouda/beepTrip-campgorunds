@@ -5,7 +5,12 @@ const Schema = mongooose.Schema;
 // In this project we are not using mongooseSchema to validate the req.body, instead we are making use of Joi
 const campgroundSchema = new Schema({
   title: String,
-  image: String,
+  images: [
+    {
+      url: String,
+      filename: String,
+    },
+  ],
   price: Number,
   description: String,
   location: String,

@@ -8,10 +8,12 @@ const Reviews = ({ reviews, onReviewDelete, user }) => {
   return reviews.map((review, index) => (
     <div key={index} className="card mb-3">
       <div className="card-body">
-        <h5 className="card-title">Rating: {review.rating}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">
+        <h6 className="card-subtitle mb-3 text-muted">
           By: {review.author.username}
         </h6>
+        <p className="starability-result" data-rating={review.rating}>
+          Rated: 3 stars
+        </p>
         <p className="card-text">Review: {review.reviewBody}</p>
         {
           <button

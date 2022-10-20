@@ -20,7 +20,20 @@ const seedDB = async () => {
     const camp = new Campground({
       location: `${location[rand1000].city}, ${location[rand1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
-      image: "https://source.unsplash.com/collection/483251",
+      images: [
+        {
+          filename: "beepTrip/yce3bzzndstswp6hoa4r",
+          url: "https://res.cloudinary.com/ddmnigwse/image/upload/v1666263072/beepTrip/yce3bzzndstswp6hoa4r.jpg",
+        },
+        {
+          filename: "beepTrip/qrjziqy2mq0u5kcbwgho",
+          url: "https://res.cloudinary.com/ddmnigwse/image/upload/v1666263072/beepTrip/qrjziqy2mq0u5kcbwgho.webp",
+        },
+        {
+          filename: "beepTrip/u2qbzijsf9n4mpooiluv",
+          url: "https://res.cloudinary.com/ddmnigwse/image/upload/v1666263073/beepTrip/u2qbzijsf9n4mpooiluv.jpg",
+        },
+      ],
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae laboriosam quia iusto corporis similique recusandae magnam perferendis ipsa nulla id!",
       price,

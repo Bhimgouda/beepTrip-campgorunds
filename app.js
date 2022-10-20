@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 // Pending on client side - Validation on all forms
 
 const express = require("express");
@@ -10,8 +13,6 @@ const reviewsRouter = require("./routes/reviews");
 const userRouter = require("./routes/user");
 const session = require("express-session");
 const catchAsync = require("./utils/catchAsync");
-const { date } = require("joi");
-const Campground = require("./models/campground");
 
 // ****************************** MIDDLEWARES ************************** //
 
@@ -67,7 +68,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err.name);
+  console.log(err.stack);
   next(err);
 });
 

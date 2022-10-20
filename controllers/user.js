@@ -36,7 +36,7 @@ exports.loginUser = async (req, res) => {
   res.send({ message: "User has been logged in Successfully", user });
 };
 
-exports.logoutUser = (req, res) => {
+exports.logoutUser = async (req, res) => {
   req.session.user_id = null;
   res.send({ message: "You have been successfully Logged out" });
 };

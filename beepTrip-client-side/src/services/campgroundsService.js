@@ -11,8 +11,12 @@ function campgroundUrl(id) {
 
 // Create request
 
-function saveCampground(campground) {
-  http.post(apiEndpoint, { campground });
+export function addCampground(campground) {
+  return http.post(apiEndpoint, campground, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }
 
 // Read requests
@@ -25,14 +29,14 @@ export function showCampground(id) {
   return http.get(campgroundUrl(id));
 }
 
-export function addCampground(campground) {
-  return http.post(apiEndpoint, campground);
-}
-
 // Update Requests
 
 export function updateCampground(id, campground) {
-  return http.put(`${campgroundUrl(id)}`, campground);
+  return http.put(`${campgroundUrl(id)}`, campground, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }
 
 // Delete Requests

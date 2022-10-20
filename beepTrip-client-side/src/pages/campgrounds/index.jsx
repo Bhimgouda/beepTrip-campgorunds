@@ -23,7 +23,7 @@ const AllCampgrounds = () => {
           <div key={index} className="card mb-3">
             <div className="row">
               <div className="col-md-4">
-                <img className="img-fluid" src={camp.image} alt="" />
+                <img className="img-fluid" src={camp.images[0].url} alt="" />
               </div>
               <div className="col-md-8">
                 <div className="card-body">

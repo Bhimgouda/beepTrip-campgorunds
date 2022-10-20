@@ -7,6 +7,8 @@ import ReviewsForm from "../../components/reviewsForm";
 import Reviews from "./../../components/reviews";
 import { DeleteReview, postReviews } from "../../services/reviews";
 import { toast } from "react-toastify";
+import "../../css/stars.css";
+import Carousel from "react-bootstrap/Carousel";
 
 const ShowCampground = ({ user }) => {
   const [campground, setcampground] = useState({});
@@ -91,7 +93,18 @@ const ShowCampground = ({ user }) => {
     <div className="row">
       <div className="col-6">
         <div className="card mb-3">
-          <img src={campground.image} className="card-img-top" alt="..." />
+          <Carousel>
+            {campground.images &&
+              campground.images &&
+              campground.images.map((image, i) => {
+                return (
+                  <Carousel.Item>
+                    <img className="d-block w-100" src={image.url} alt="" />
+                  </Carousel.Item>
+                );
+              })}
+          </Carousel>
+
           <div className="card-body">
             <h5 className="card-title"> {campground.title}</h5>
             <p className="card-text"> {campground.description}</p>

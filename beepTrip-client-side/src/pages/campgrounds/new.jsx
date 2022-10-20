@@ -1,26 +1,49 @@
 import { addCampground } from "../../services/campgroundsService";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { validate } from "../../utils/validate";
 
 const NewCampground = ({}) => {
+  const [campground, setcampground] = useState({
+    description: "",
+    images: "",
+    location: "",
+    price: "",
+    title: "",
+  });
+  const [error, setErrors] = useState({});
+
   let navigate = useNavigate();
 
+  const handleChange = (e) => {
+    const c = { ...campground };
+    c[e.currentTarget.name] = e.currentTarget.value;
+    setcampground(c);
+  };
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      const { title, location, image, description, price } = e.target;
-      const newCamp = {
-        title: title.value,
-        location: location.value,
-        description: description.value,
-        image: image.value,
-        price: price.value,
-      };
-      const { data: camp } = await addCampground(newCamp);
+      const formElements = [...e.target.elements]; // This was html collection so we have to convert it to an array to use array methods on it
+      const newCamp = {}; // We created this object for validation purposes
+      formElements.forEach((el) => {
+        if (el.nodeName === "INPUT" || el.nodeName === "TEXTAREA")
+          newCamp[`${el.id}`] = el.value;
+      });
+      const { images, description, title, price, location } = e.target;
+      const formData = new FormData();
+      for (var i = 0; i < images.files.length; i++) {
+        formData.append("images", images.files[i]);
+      }
+      formData.append("description", description.value);
+      formData.append("price", price.value);
+      formData.append("location", location.value);
+      formData.append("title", title.value);
+      const { data: camp } = await addCampground(formData);
       toast.success("Campground Successfully Added", { autoClose: 2500 });
       navigate(`/campgrounds/${camp._id}`);
-    } catch (error) {
+    } catch (e) {
       toast.error(error.response.data, { autoClose: 2500 });
     }
   };
@@ -29,18 +52,31 @@ const NewCampground = ({}) => {
     <div className="row">
       <h1 className="text-center">New Campground</h1>
       <div className="col-6 offset-3">
-        <form onSubmit={handleSubmit} noValidate action="">
+        <form
+          encType="multipart/form-data"
+          onSubmit={handleSubmit}
+          noValidate
+          action=""
+        >
           <div className="mb-2">
-            <label className="form-label" htmlFor="title">
+            <label className="form-label" htmlFor="const ">
               Title
             </label>
-            <input required className="form-control" type="text" id="title" />
+            <input
+              onChange={handleChange}
+              required
+              className="form-control"
+              type="text"
+              id="title"
+            />
           </div>
+
           <div className="mb-2">
             <label className="form-label" htmlFor="location">
               Location
             </label>
             <input
+              onChange={handleChange}
               required
               className="form-control"
               type="text"
@@ -48,10 +84,16 @@ const NewCampground = ({}) => {
             />
           </div>
           <div className="mb-2">
-            <label className="form-label" htmlFor="image">
-              Image Url
+            <label className="form-label" htmlFor="images">
+              Upload Images
             </label>
-            <input required className="form-control" type="text" id="image" />
+            <input
+              multiple
+              type="file"
+              name="images"
+              id="images"
+              className="form-control"
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="price" className="form-label">
@@ -62,6 +104,7 @@ const NewCampground = ({}) => {
                 $
               </span>
               <input
+                onChange={handleChange}
                 id="price"
                 type="text"
                 className="form-control"
