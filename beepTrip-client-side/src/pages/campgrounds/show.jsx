@@ -12,6 +12,7 @@ import Carousel from "react-bootstrap/Carousel";
 
 const ShowCampground = ({ user }) => {
   const [campground, setcampground] = useState({});
+
   const { id } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -19,7 +20,6 @@ const ShowCampground = ({ user }) => {
     async function get() {
       try {
         const { data: campgroundData } = await showCampground(id);
-        console.log(campgroundData);
         setcampground(campgroundData);
       } catch (e) {
         navigate("/not-found");
