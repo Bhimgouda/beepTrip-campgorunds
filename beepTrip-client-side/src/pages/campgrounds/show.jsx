@@ -19,6 +19,7 @@ const ShowCampground = ({ user }) => {
     async function get() {
       try {
         const { data: campgroundData } = await showCampground(id);
+        console.log(campgroundData);
         setcampground(campgroundData);
       } catch (e) {
         navigate("/not-found");

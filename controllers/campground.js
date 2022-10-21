@@ -1,5 +1,6 @@
 const Campground = require("../models/campground");
 const AppError = require("../utils/appError");
+const { cloudinary } = require("../cloudinary");
 
 exports.index = async (req, res) => {
   const campgrounds = await Campground.find();
@@ -25,7 +26,12 @@ exports.showCampground = async (req, res) => {
 exports.createCamground = async (req, res) => {
   req.body.author = req.session.user_id; // Adding the user Id to campground of the user id who made the campground
   const camp = new Campground(req.body);
-  camp.images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  camp.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+    thumbnail: f.path.replace("/upload", "/upload/w_100"),
+  }));
+  console.log(camp.images);
   await camp.save();
   res.send(camp);
 };
@@ -43,6 +49,16 @@ exports.editCampground = async (req, res) => {
   }));
   campground.images.push(...newImages);
   await campground.save();
+
+  if (req.body.deleteImages) {
+    for (filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    }
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: req.body.deleteImages } } },
+    });
+  }
+
   if (campground) res.send("Updated Successfully");
   else throw new AppError("You are not authorized to update Campground", 401);
 };

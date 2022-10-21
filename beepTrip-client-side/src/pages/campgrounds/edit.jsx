@@ -38,22 +38,22 @@ const EditCampground = ({ user }) => {
   const handleEdit = async (e) => {
     try {
       e.preventDefault();
-      const { title, location, images, price, description } = e.target;
-      const editedCampground = {
-        title: title.value,
-        location: location.value,
-        images: images.value,
-        description: description.value,
-        price: price.value,
-      };
-      const formData = new FormData();
-      for (var i = 0; i < images.files.length; i++) {
-        formData.append("images", images.files[i]);
-      }
-      formData.append("description", description.value);
-      formData.append("price", price.value);
-      formData.append("location", location.value);
-      formData.append("title", title.value);
+      const formInputs = [...e.target.elements].filter((el) => {
+        if (el.nodeName === "INPUT" || el.nodeName === "TEXTAREA") {
+          if (el.name.includes("deleteImage") && !el.checked) return;
+          return el;
+        }
+      });
+      console.log(formInputs);
+      var formData = new FormData();
+      formInputs.forEach((input) => {
+        if (input.name === "images") {
+          for (var i = 0; i < input.files.length; i++) {
+            formData.append("images", input.files[i]);
+          }
+        } else formData.append(`${input.name}`, input.value);
+      });
+
       await updateCampground(id, formData);
       toast.success("Campground Updated Successfully", { autoClose: 2500 });
       navigate(`/campgrounds/${id}`);
@@ -106,7 +106,6 @@ const EditCampground = ({ user }) => {
             </label>
             <input
               multiple
-              onChange={handleChange}
               className="form-control"
               type="file"
               id="images"
@@ -146,6 +145,29 @@ const EditCampground = ({ user }) => {
               type="text"
               id="description"
             ></textarea>
+          </div>
+          <div className="mb-3">
+            {campground.images &&
+              campground.images.map((image, i) => {
+                return (
+                  <React.Fragment key={i}>
+                    <div>
+                      <img
+                        className="img-thumbnail"
+                        src={image.thumbnail}
+                        alt=""
+                      />
+                      <input
+                        type="checkbox"
+                        name="deleteImages[]"
+                        value={image.filename}
+                        id={`$image-${i}`}
+                      />
+                      <label htmlFor={`$image-${i}`}>Delete?</label>
+                    </div>
+                  </React.Fragment>
+                );
+              })}
           </div>
           <div className="mb-3">
             <button className="btn btn-info">Update Campground</button>

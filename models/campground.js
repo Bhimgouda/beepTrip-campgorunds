@@ -3,14 +3,16 @@ const Review = require("./review");
 const Schema = mongooose.Schema;
 
 // In this project we are not using mongooseSchema to validate the req.body, instead we are making use of Joi
+
+const ImageSchema = new Schema({
+  url: String,
+  filename: String,
+  thumbnail: String,
+});
+
 const campgroundSchema = new Schema({
   title: String,
-  images: [
-    {
-      url: String,
-      filename: String,
-    },
-  ],
+  images: [ImageSchema],
   price: Number,
   description: String,
   location: String,
