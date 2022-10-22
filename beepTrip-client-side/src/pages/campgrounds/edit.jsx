@@ -41,6 +41,8 @@ const EditCampground = ({ user }) => {
 
       const formInputs = [...e.target.elements].filter((el) => {
         if (el.nodeName === "INPUT" || el.nodeName === "TEXTAREA") {
+          if (el.name.includes("deleteImages") && el.checked) return el;
+          else if (el.name.includes("deleteImages")) return null;
           return el;
         }
       });

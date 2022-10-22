@@ -45,6 +45,7 @@ exports.editCampground = async (req, res) => {
   const newImages = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
+    thumbnail: f.path.replace("/upload", "/upload/w_100"),
   }));
   campground.images.push(...newImages);
   await campground.save();

@@ -1,10 +1,7 @@
 {
   "scripts": {
     "start": "node app.js",
-    "build-client":"cd beepTrip-client-side && npm run build",
-    "install-client-packages" :"cd beepTrip-client-side && npm install",
-    "heroku-postbuild": "npm run install-client-packages && npm run build-client",
-    "client":"cd beepTrip-client-side && npm start"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

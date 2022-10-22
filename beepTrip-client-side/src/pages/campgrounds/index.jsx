@@ -25,7 +25,10 @@ const AllCampgrounds = () => {
               <div className="col-md-4">
                 <img
                   className="img-fluid"
-                  src={camp.images[0] && camp.images[0].url}
+                  src={
+                    camp.images[0] &&
+                    camp.images[0].url.replace("/upload", "/upload/w_550")
+                  }
                   alt=""
                 />
               </div>
