@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 // Pending on client side - Validation on all forms
 
 const express = require("express");
@@ -13,6 +10,15 @@ const reviewsRouter = require("./routes/reviews");
 const userRouter = require("./routes/user");
 const session = require("express-session");
 const catchAsync = require("./utils/catchAsync");
+const MongoStore = require("connect-mongo");
+
+const dbUrl = process.env.MONGODB_URI || "mongodb://localhost:27017/beep-trip";
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("beepTrip-client-side/build"));
+} else {
+  require("dotenv").config();
+}
 
 // ****************************** MIDDLEWARES ************************** //
 
@@ -27,9 +33,25 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 
+//----------------- EXPRESS SESSION CONFIGURATION ------------------//
+
+const secret = process.env.SECRET || "happysecret";
+
+// Mongo Store initialization
+const store = new MongoStore({
+  mongoUrl: dbUrl,
+  secret,
+  touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", (e) => {
+  console.log("Session Store Error", e);
+});
+
 // Session configuration
 const sessionConfig = {
-  secret: "happysecret",
+  store,
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -68,7 +90,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err.stack);
+  console.log(err.name);
   next(err);
 });
 
@@ -80,7 +102,7 @@ app.use((err, req, res, next) => {
 
 // Connecting to mongooose
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/beep-trip")
+  .connect(dbUrl)
   .then(() => console.log("CONNECTED TO DATABASE"))
   .catch((err) =>
     console.log("OH NO!! THERE WAS A PROBLEM WHILE CONNECTING TO THE DATABASE")
@@ -88,11 +110,8 @@ mongoose
 
 // Starting the Server
 
-const PORT = process.env.port || 7000;
+const PORT = process.env.PORT || 7000;
 
 app.listen(PORT, () => {
-  console.log("LISTENING ON PORT 7000");
+  console.log(`LISTENING ON PORT ${PORT}`);
 });
-
-if (process.env.NODE_ENV === "production") {
-}

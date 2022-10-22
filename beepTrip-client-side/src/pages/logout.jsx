@@ -13,7 +13,7 @@ const Logout = ({ updateUser }) => {
     } catch (error) {
       toast.error(error.response.data, { autoClose: 2500 });
     }
-    navigate("/campgrounds");
+    navigate("/login");
   };
   return (
     <Link className="nav-link" onClick={handleLogout}>

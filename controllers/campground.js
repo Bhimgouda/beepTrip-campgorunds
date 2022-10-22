@@ -31,7 +31,6 @@ exports.createCamground = async (req, res) => {
     filename: f.filename,
     thumbnail: f.path.replace("/upload", "/upload/w_100"),
   }));
-  console.log(camp.images);
   await camp.save();
   res.send(camp);
 };

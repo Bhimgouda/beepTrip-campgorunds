@@ -38,13 +38,13 @@ const EditCampground = ({ user }) => {
   const handleEdit = async (e) => {
     try {
       e.preventDefault();
+
       const formInputs = [...e.target.elements].filter((el) => {
         if (el.nodeName === "INPUT" || el.nodeName === "TEXTAREA") {
-          if (el.name.includes("deleteImage") && !el.checked) return;
           return el;
         }
       });
-      console.log(formInputs);
+
       var formData = new FormData();
       formInputs.forEach((input) => {
         if (input.name === "images") {

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 const Reviews = ({ reviews, onReviewDelete, user }) => {
   useEffect(() => {}, [reviews]);
-
   if (!reviews) return;
 
   return reviews.map((review, index) => (
@@ -15,14 +14,14 @@ const Reviews = ({ reviews, onReviewDelete, user }) => {
           Rated: 3 stars
         </p>
         <p className="card-text">Review: {review.reviewBody}</p>
-        {
+        {user._id === review.author._id && (
           <button
             onClick={() => onReviewDelete(review)}
             className="btn btn-sm btn-danger"
           >
             Delete
           </button>
-        }
+        )}
       </div>
     </div>
   ));
